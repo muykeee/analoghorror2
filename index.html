@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Windows 98</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: #008080;
+            overflow: hidden;
+        }
+        
+        .desktop {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: #c0c0c0;
+            border-top: 2px solid #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 1000;
+        }
+        
+        .start-button {
+            background: #c0c0c0;
+            border: 2px solid #fff;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            padding: 2px 8px;
+            cursor: pointer;
+        }
+        
+        .start-menu {
+            display: none;
+            position: fixed;
+            bottom: 32px;
+            left: 0;
+            width: 200px;
+            background: #c0c0c0;
+            border: 2px solid #fff;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            z-index: 1000;
+        }
+        
+        .menu-item {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background: #000080;
+            color: white;
+        }
+        
+        .clock {
+            background: #c0c0c0;
+            border: 2px solid #808080;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+            padding: 2px 8px;
+        }
+        
+        .icon {
+            width: 75px;
+            height: 75px;
+            margin: 10px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            display: inline-block;
+        }
+        
+        .icon img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 5px;
+        }
+        
+        .window {
+            position: absolute;
+            background: #c0c0c0;
+            border: 2px solid #fff;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            min-width: 300px;
+            min-height: 200px;
+            display: none;
+            z-index: 100;
+        }
+        
+        .title-bar {
+            background: #000080;
+            color: white;
+            padding: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+        
+        .close-button {
+            background: #c0c0c0;
+            border: 1px solid #fff;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 16px;
+            cursor: pointer;
+        }
+        
+        .window-content {
+            padding: 10px;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        
+        .folder-content {
+            padding: 10px;
+        }
+        
+        .folder-item {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+        }
+        
+        .folder-item:hover {
+            background: #000080;
+            color: white;
+        }
+        
+        .folder-item img {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+        
+        .static {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1000;
+        }
+        
+        .blue-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0000aa;
+            color: #ffffff;
+            padding: 50px;
+            font-size: 16px;
+            line-height: 1.5;
+            z-index: 2000;
+        }
+        
+        .dialog {
+            position: fixed;
+            background: #c0c0c0;
+            border: 2px solid #fff;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            padding: 10px;
+            min-width: 200px;
+            text-align: center;
+            display: none;
+            z-index: 1500;
+        }
+    </style>
+</head>
+<body>
+    <div class="static"></div>
+    <div class="desktop">
+        <div class="icon" onclick="openWindow('computer')">
+            <img src="data:image/gif;base64,R0lGODlhIAAgAIAAAAAAAP///yH5BAEAAAEALAAAAAAgACAAAAJYjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6yUAOw==" alt="computer">
+            <div>我的电脑</div>
+        </div>
+        <div class="icon" onclick="openWindow('recycle')">
+            <img src="data:image/gif;base64,R0lGODlhIAAgAIAAAAAAAP///yH5BAEAAAEALAAAAAAgACAAAAJYjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6yUAOw==" alt="recycle">
+            <div>回收站</div>
+        </div>
+    </div>
+
+    <div class="window" id="computer-window">
+        <div class="title-bar">
+            <div>我的电脑</div>
+            <div class="close-button" onclick="closeWindow('computer-window')">x</div>
+        </div>
+        <div class="folder-content">
+            <div class="folder-item" onclick="openWindow('documents')">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAIAAAAAAAP///yH5BAEAAAEALAAAAAAQABAAAAIjjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6yUAOw==" alt="folder">
+                <span>文档</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="documents-window">
+        <div class="title-bar">
+            <div>文档</div>
+            <div class="close-button" onclick="closeWindow('documents-window')">x</div>
+        </div>
+        <div class="folder-content">
+            <div class="folder-item" onclick="openFile('readme')">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAIAAAAAAAP///yH5BAEAAAEALAAAAAAQABAAAAIjjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6yUAOw==" alt="txt">
+                <span>README.TXT</span>
+            </div>
+            <div class="folder-item" onclick="openFile('help')">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAIAAAAAAAP///yH5BAEAAAEALAAAAAAQABAAAAIjjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6yUAOw==" alt="txt">
+                <span>HELP.TXT</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="recycle-window">
+        <div class="title-bar">
+            <div>回收站</div>
+            <div class="close-button" onclick="closeWindow('recycle-window')">x</div>
+        </div>
+        <div class="folder-content">
+            <div class="folder-item" onclick="openFile('secret')">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAIAAAAAAAP///yH5BAEAAAEALAAAAAAQABAAAAIjjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6yUAOw==" alt="txt">
+                <span>SECRET.TXT</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="readme-window">
+        <div class="title-bar">
+            <div>README.TXT</div>
+            <div class="close-button" onclick="closeWindow('readme-window')">x</div>
+        </div>
+        <div class="window-content">2024年10月20日
+一切正常，系统例行维护完成。
+
+2024年10月21日
+发现部分系统日志被篡改，但查不到修改记录。
+
+2024年10月22日
+有人在深夜登录了系统？但监控显示办公室空无一人...
+
+2024年10月23日
+[文件损坏]来了[文件损坏]它就在这里[文件损坏]</div>
+    </div>
+
+    <div class="window" id="help-window">
+        <div class="title-bar">
+            <div>HELP.TXT</div>
+            <div class="close-button" onclick="closeWindow('help-window')">x</div>
+        </div>
+        <div class="window-content">基本系统操作指南
+1. 请勿在23:59后使用系统
+2. 遇到异常时请立即[文件损坏]
+3. 它在看着你
+4. 永远不要打开[文件损坏]
+5. 你已经打开了[文件损坏]</div>
+    </div>
+
+    <div class="window" id="secret-window">
+        <div class="title-bar">
+            <div>SECRET.TXT</div>
+            <div class="close-button" onclick="closeWindow('secret-window')">x</div>
+        </div>
+        <div class="window-content">01001001 01110100 00100000
+它就在你身后
+01001001 01110100 00100000
+别回头
+01001001 01110100 00100000
+[系统已接管]</div>
+    </div>
+
+    <div class="dialog" id="random-dialog">
+        <div id="random-text"></div>
+    </div>
+
+    <div class="blue-screen" id="bsod">
+        WINDOWS 98
+
+        致命系统错误
+        错误代码: 0x000000666
+
+        * 系统已被感染
+        * 检测到未知实体正在接管系统
+        * 正在删除所有系统文件
+
+        按任意键继续...
+    </div>
+
+    <div class="start-menu" id="start-menu">
+        <div class="menu-item">程序</div>
+        <div class="menu-item">文档</div>
+        <div class="menu-item">设置</div>
+        <div class="menu-item" onclick="showRandomDialog()">？？？</div>
+    </div>
+
+    <div class="taskbar">
+        <div class="start-button" onclick="toggleStartMenu()">开始</div>
+        <div class="clock" id="clock">23:59:00</div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        let staticEffect = document.querySelector('.static');
+        let startMenu = document.getElementById('start-menu');
+        
+        const randomMessages = [
+            "为什么时钟一直显示23:59？",
+            "有人在用这台电脑吗？",
+            "你确定你是一个人在用这台电脑吗？",
+            "它就在屏幕后面",
+            "检测到未知用户操作"
+        ];
+
+        function updateClock() {
+            const clock = document.getElementById('clock');
+            const time = clock.innerHTML.split(':');
+            let seconds = parseInt(time[2]);
+            
+            seconds = (seconds + 1) % 60;
+            clock.innerHTML = `23:59:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function toggleStartMenu() {
+            startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showRandomDialog() {
+            const dialog = document.getElementById('random-dialog');
+            const randomText = document.getElementById('random-text');
+            const message = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+            
+            randomText.textContent = message;
+            dialog.style.display = 'block';
+            dialog.style.left = '50%';
+            dialog.style.top = '50%';
+            dialog.style.transform = 'translate(-50%, -50%)';
+            
+            setTimeout(() => {
+                dialog.style.display = 'none';
+            }, 2000);
+        }
+
+        function openWindow(type) {
+            const windows = document.querySelectorAll('.window');
+            windows.forEach(w => w.style.display = 'none');
+            
+            const window = document.getElementById(`${type}-window`);
+            window.style.display = 'block';
+            window.style.left = '50%';
+            window.style.top = '50%';
+            window.style.transform = 'translate(-50%, -50%)';
+        }
+
+        function openFile(type) {
+            if (type === 'secret') {
+                clickCount++;
+                staticEffect.style.opacity = '0.2';
+                setTimeout(() => {
+                    staticEffect.style.opacity = '0';
+                }, 100);
+                
+                if (clickCount >= 3) {
+                    setTimeout(showBlueScreen, 1000);
+                    return;
+                }
+            }
+            
+            openWindow(type);
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function showBlueScreen() {
+            document.getElementById('bsod').style.display = 'block';
+            document.addEventListener('keydown', function() {
+                location.reload();
+            });
+        }
+
+        // 更新时钟
+        setInterval(updateClock, 1000);
+
+        // 随机产生干扰效果
+        setInterval(() => {
+            if (Math.random() < 0.1) {
+                staticEffect.style.opacity = '0.1';
+                setTimeout(() => {
+                    staticEffect.style.opacity = '0';
+                }, 100);
+            }
+        }, 5000);
+
+        // 点击桌面时关闭开始菜单
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.start-button') && !e.target.closest('.start-menu')) {
+                startMenu.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
