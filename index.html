@@ -190,6 +190,14 @@
             display: none;
             z-index: 1500;
         }
+
+        .menu-separator {
+    height: 1px;
+    background: #808080;
+    border-bottom: 1px solid #fff;
+    margin: 4px 0;
+}
+        
     </style>
 </head>
 <body>
@@ -310,11 +318,15 @@
     </div>
 
     <div class="start-menu" id="start-menu">
-        <div class="menu-item">程序</div>
-        <div class="menu-item">文档</div>
-        <div class="menu-item">设置</div>
-        <div class="menu-item" onclick="showRandomDialog()">？？？</div>
-    </div>
+    <div class="menu-item">程序</div>
+    <div class="menu-item">文档</div>
+    <div class="menu-item">设置</div>
+    <div class="menu-item">查找</div>
+    <div class="menu-item">帮助</div>
+    <div class="menu-item">关机</div>
+    <div class="menu-separator"></div>
+    <div class="menu-item" onclick="showRandomDialog()">？？？</div>
+</div>
 
     <div class="taskbar">
         <div class="start-button" onclick="toggleStartMenu()">开始</div>
